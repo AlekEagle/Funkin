@@ -42,7 +42,7 @@ class MultiplayerClient {
 	public dynamic function onGameStart() {}
 
 	public function setReady() {
-		if (this.state != User.Lobby(false))
+		if (!this.state.match(User.Lobby(false)))
 			throw "wow you're dumbo";
 
 		this.sendShit({"opcode": "0"});
@@ -83,7 +83,7 @@ class MultiplayerClient {
 					case "1":
 						var changed = [];
 						for (user in message.users) {
-							if (this.users.get(user) == User.Lobby(false))
+							if (this.users.get(user).match(User.Lobby(false)))
 								changed.push(user);
 							this.users.set(user, User.Lobby(true));
 						}

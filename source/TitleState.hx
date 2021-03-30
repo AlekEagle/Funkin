@@ -1,9 +1,5 @@
 package;
 
-#if desktop
-import Discord.DiscordClient;
-import sys.thread.Thread;
-#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -65,6 +61,8 @@ class TitleState extends MusicBeatState
 		trace('NEWGROUNDS LOL');
 		#end
 
+		FlxG.autoPause = false;
+
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
 		Highscore.load();
@@ -92,10 +90,6 @@ class TitleState extends MusicBeatState
 		{
 			startIntro();
 		});
-		#end
-
-		#if desktop
-		DiscordClient.initialize();
 		#end
 	}
 
@@ -287,22 +281,22 @@ class TitleState extends MusicBeatState
 				// Check if version is outdated
 
 				var version:String = "v" + Application.current.meta.get('version');
-        /*
-				if (version.trim() != NGio.GAME_VER_NUMS.trim() && !OutdatedSubState.leftState)
-				{
-					FlxG.switchState(new OutdatedSubState());
-					trace('OLD VERSION!');
-					trace('old ver');
-					trace(version.trim());
-					trace('cur ver');
-					trace(NGio.GAME_VER_NUMS.trim());
-				}
-				else
-				{
-					FlxG.switchState(new MainMenuState());
-				}
-        */
-        FlxG.switchState(new MainMenuState());
+				/*
+					if (version.trim() != NGio.GAME_VER_NUMS.trim() && !OutdatedSubState.leftState)
+					{
+						FlxG.switchState(new OutdatedSubState());
+						trace('OLD VERSION!');
+						trace('old ver');
+						trace(version.trim());
+						trace('cur ver');
+						trace(NGio.GAME_VER_NUMS.trim());
+					}
+					else
+					{
+						FlxG.switchState(new MainMenuState());
+					}
+				 */
+				FlxG.switchState(new MainMenuState());
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}

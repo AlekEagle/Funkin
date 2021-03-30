@@ -1,5 +1,8 @@
 package;
 
+import flixel.addons.transition.FlxTransitionableState;
+import MPClientStore;
+import openfl.errors.SecurityError;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -12,7 +15,7 @@ import lime.utils.Assets;
 
 using StringTools;
 
-class FreeplayState extends MusicBeatState
+class MultiplayerMusicMenu extends MusicBeatState
 {
 	var songs:Array<SongMetadata> = [];
 
@@ -34,6 +37,12 @@ class FreeplayState extends MusicBeatState
 	{
 		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
+		transIn = FlxTransitionableState.defaultTransIn;
+		transOut = FlxTransitionableState.defaultTransOut;
+
+		FlxTransitionableState.skipNextTransIn = true;
+		FlxTransitionableState.skipNextTransOut = true;
+
 		for (i in 0...initSonglist.length)
 		{
 			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
@@ -46,7 +55,6 @@ class FreeplayState extends MusicBeatState
 					FlxG.sound.playMusic(Paths.music('freakyMenu'));
 			}
 		 */
-
 		var isDebug:Bool = false;
 
 		#if debug
@@ -170,6 +178,9 @@ class FreeplayState extends MusicBeatState
 
 	override function update(elapsed:Float)
 	{
+		#if sys
+		MPClientStore.client.process();
+		#end
 		super.update(elapsed);
 
 		if (FlxG.sound.music.volume < 0.7)
@@ -204,22 +215,19 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new MainMenuState());
+			FlxG.switchState(new MultiplayerLobby());
 		}
 
 		if (accepted)
 		{
-			var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+			MPClientStore.client.setSong(new MultiplayerSong({
+				name: songs[curSelected].songName.toLowerCase(),
+				difficulty: curDifficulty,
+				week: songs[curSelected].week
+			}));
+			MPClientStore.client.setReady();
 
-			trace(poop);
-
-			PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
-			PlayState.isStoryMode = false;
-			PlayState.storyDifficulty = curDifficulty;
-
-			PlayState.storyWeek = songs[curSelected].week;
-			trace('CUR WEEK' + PlayState.storyWeek);
-			LoadingState.loadAndSwitchState(new PlayState());
+			FlxG.switchState(new MultiplayerLobby());
 		}
 	}
 

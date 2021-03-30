@@ -1,8 +1,5 @@
 package;
 
-#if desktop
-import Discord.DiscordClient;
-#end
 import Controls.Control;
 import flash.text.TextField;
 import flixel.FlxG;
@@ -16,23 +13,34 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
 
-class MultiplayerLobby extends MusicBeatState {
-  var movedBack:Bool = false;
+class MultiplayerLobby extends MusicBeatState
+{
+	var movedBack:Bool = false;
 
-  var menuText:Array<FlxText> = new Array<FlxText>();
+	var plyrs:Array<MultiplayerLobbyEntry> = new Array<MultiplayerLobbyEntry>();
 
-  var menuBG:FlxSprite;
+	var menuBG:FlxSprite;
 
-  var selection:Int = 0;
+	var selection:Int = 0;
 
-  var selected:Bool = false;
+	var selected:Bool = false;
 
-  var mpClient: MultiplayerClient;
+	var songTitle:FlxText;
 
-  override function create() {
-    menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-    transIn = FlxTransitionableState.defaultTransIn;
+	override function create()
+	{
+		Storage.init();
+		var alreadyConnected = true;
+		if (MPClientStore.client == null)
+		{
+			alreadyConnected = false;
+			MPClientStore.client = new MultiplayerClient(Storage.get("address"), Storage.get("name"));
+		}
+		menuBG = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
+
+		songTitle = new FlxText(8, FlxG.height - 48, 0, "Selected Song: None", 36);
 
 		menuBG.color = 0xFFea71fd;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
@@ -43,35 +51,106 @@ class MultiplayerLobby extends MusicBeatState {
 
 		if (FlxG.sound.music != null)
 		{
-			if (!FlxG.sound.music.playing)
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
-		
-		#if desktop
-		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In a lobby", null);
+
+		for (i in 0...4)
+		{
+			plyrs.push(new MultiplayerLobbyEntry(i, null, this));
+		}
+
+		if (alreadyConnected)
+		{
+			var a = MPClientStore.client.users.keyValueIterator();
+			for (i in 0...4)
+			{
+				if (a.hasNext())
+					plyrs[i].setPlayer(a.next().value);
+				else
+					plyrs[i].setPlayer(null);
+			}
+		}
+
+		MPClientStore.client.onGameStart = function()
+		{
+			var poop:String = Highscore.formatSong(MPClientStore.client.song.name, MPClientStore.client.song.difficulty);
+
+			MultiplayerPlayState.SONG = Song.loadFromJson(poop, MPClientStore.client.song.name);
+			MultiplayerPlayState.isStoryMode = false;
+			MultiplayerPlayState.storyDifficulty = MPClientStore.client.song.difficulty;
+
+			MultiplayerPlayState.storyWeek = MPClientStore.client.song.week;
+			MultiplayerLoadingState.loadAndSwitchState(new MultiplayerPlayState());
+		}
+
+		add(songTitle);
+
+		MPClientStore.client.onConnect = function(players)
+		{
+			var a = players.keyValueIterator();
+			for (i in 0...4)
+			{
+				if (a.hasNext())
+					plyrs[i].setPlayer(a.next().value);
+				else
+					plyrs[i].setPlayer(null);
+			}
+		}
+
+		MPClientStore.client.onUserUpdate = function(players, song)
+		{
+			var a = players.keyValueIterator();
+			for (i in 0...4)
+			{
+				if (a.hasNext())
+					plyrs[i].setPlayer(a.next().value);
+				else
+					plyrs[i].setPlayer(null);
+			}
+			if (song != null)
+			{
+				if (song.name == null)
+					return;
+				var diffStr = "";
+				switch (song.difficulty)
+				{
+					case 0:
+						diffStr = "EASY";
+					case 1:
+						diffStr = "NORMAL";
+					case 2:
+						diffStr = "HARD";
+				}
+				songTitle.text = 'Selected Song: ${song.name.split("-").join(" ")} $diffStr';
+			}
+		}
+		super.create();
+	}
+
+	override function update(elapsed:Float)
+	{
+		#if sys
+		MPClientStore.client.process();
 		#end
 
-    
+		if (controls.ACCEPT && !selected)
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'));
+			if (MPClientStore.client.owner && !MPClientStore.client.users.get(MPClientStore.client.me).state.getParameters()[0])
+				FlxG.switchState(new MultiplayerMusicMenu());
+			else
+				MPClientStore.client.setReady();
+		}
 
-    super.create();
-  }
-
-  override function update(elapsed:Float) {
-
-    if (controls.ACCEPT && !selected) {
-      FlxG.sound.play(Paths.sound('confirmMenu'));
-      selected = true;
-    }
-
-
-    if (controls.BACK && !movedBack)
+		if (controls.BACK && !movedBack)
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
+			MPClientStore.client.close();
+			MPClientStore.client = null;
 			FlxG.switchState(new MultiplayerMenu());
 		}
 
-    super.update(elapsed);
-  }
+		super.update(elapsed);
+	}
 }

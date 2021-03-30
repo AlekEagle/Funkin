@@ -137,7 +137,12 @@ class MultiplayerLobby extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 			if (MPClientStore.client.owner && !MPClientStore.client.users.get(MPClientStore.client.me).state.getParameters()[0])
+			{
+				MPClientStore.client.onUserUpdate = function(player, songelapsed)
+				{
+				}
 				FlxG.switchState(new MultiplayerMusicMenu());
+			}
 			else
 				MPClientStore.client.setReady();
 		}

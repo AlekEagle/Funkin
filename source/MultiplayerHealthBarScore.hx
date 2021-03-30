@@ -24,7 +24,7 @@ class MultiplayerHealthBarScore
 	public function new(i:Int, player:Player, ctx:MusicBeatState, song:SwagSong, cams:Array<FlxCamera>)
 	{
 		this.player = player;
-		this.barBG = new FlxSprite(5, FlxG.height * (0.2 + (i / 10))).loadGraphic(Paths.image('healthBar'));
+		this.barBG = new FlxSprite(5, FlxG.height * (0.4 + (i / 10))).loadGraphic(Paths.image('healthBar'));
 		this.bar = new FlxBar(this.barBG.x + 4, this.barBG.y + 4, RIGHT_TO_LEFT, Std.int(this.barBG.width - 8), Std.int(this.barBG.height - 8), this,
 			'health', 0, 2);
 		this.health = this.player.health;
@@ -56,7 +56,10 @@ class MultiplayerHealthBarScore
 		this.player = player;
 		this.health = this.player.health;
 		this.scoreTxt.text = '${this.player.name}\'s Score:${this.player.score}';
+	}
 
+	public function otherUpdate()
+	{
 		this.iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, this.iconP1.width, 0.50)));
 		this.iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, this.iconP2.width, 0.50)));
 

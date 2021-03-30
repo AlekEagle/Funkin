@@ -177,5 +177,7 @@ class MultiplayerClient
 	public function close()
 	{
 		this.socket.close();
+		this.users.clear();
+		this.me = "";
 	}
 }

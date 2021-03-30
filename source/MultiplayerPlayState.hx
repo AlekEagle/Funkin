@@ -1197,6 +1197,11 @@ class MultiplayerPlayState extends MusicBeatState
 			playersHealth.get(user.name).update(user);
 		}
 
+		for (key => value in playersHealth)
+		{
+			value.otherUpdate();
+		}
+
 		#if sys
 		MPClientStore.client.process();
 		#end
@@ -1536,7 +1541,7 @@ class MultiplayerPlayState extends MusicBeatState
 		}
 		else
 		{
-			FlxG.switchState(new MultiplayerLobby());
+			FlxG.switchState(new MultiplayerFinishScreen());
 		}
 	}
 

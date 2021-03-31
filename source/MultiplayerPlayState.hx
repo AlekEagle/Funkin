@@ -85,6 +85,8 @@ class MultiplayerPlayState extends MusicBeatState
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 
+	private var isLoaded:Bool = false;
+
 	private var waitingTxt:FlxText;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
@@ -684,7 +686,6 @@ class MultiplayerPlayState extends MusicBeatState
 								ease: FlxEase.quadInOut,
 								onComplete: function(twn:FlxTween)
 								{
-									MPClientStore.client.setLoaded();
 								}
 							});
 						});
@@ -697,7 +698,6 @@ class MultiplayerPlayState extends MusicBeatState
 				case 'thorns':
 					schoolIntro(doof);
 				default:
-					MPClientStore.client.setLoaded();
 			}
 		}
 		else
@@ -705,7 +705,6 @@ class MultiplayerPlayState extends MusicBeatState
 			switch (curSong.toLowerCase())
 			{
 				default:
-					MPClientStore.client.setLoaded();
 			}
 		}
 
@@ -789,9 +788,7 @@ class MultiplayerPlayState extends MusicBeatState
 					}
 				}
 				else
-					MPClientStore.client.setLoaded();
-
-				remove(black);
+					remove(black);
 			}
 		});
 	}
@@ -1200,6 +1197,12 @@ class MultiplayerPlayState extends MusicBeatState
 		for (key => value in playersHealth)
 		{
 			value.otherUpdate();
+		}
+
+		if (!isLoaded)
+		{
+			MPClientStore.client.setLoaded();
+			isLoaded = true;
 		}
 
 		#if sys

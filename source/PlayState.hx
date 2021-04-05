@@ -49,6 +49,14 @@ class PlayState extends MusicBeatState
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
+	
+	var isWired:Bool;
+	var wired:Bool;
+	var bgHex:FlxSprite;
+	var stageFrontHex:FlxSprite;
+	private var fuckBackground:FlxSprite;
+	private var fuckBoyfriend:Boyfriend;
+	private var fuckHex:Character;
 
 	var halloweenLevel:Bool = false;
 
@@ -484,6 +492,62 @@ class PlayState extends MusicBeatState
 				add(waveSpriteFG);
 			 */
 		}
+		else if (SONG.player2.contains('hex')) // IM LAZY
+		{
+			defaultCamZoom = 0.9;
+			curStage = 'hex';
+			var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback','hex'));
+			var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront','hex'));
+
+
+			switch(SONG.song.toLowerCase())
+			{
+				case 'ram':
+					curStage = 'hexss';
+					bg = new FlxSprite(-600, -200).loadGraphic(Paths.image('sunset/stageback','hex'));
+					stageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('sunset/stagefront','hex'));
+				case 'hello-world':
+					curStage = 'hexn';
+					bg = new FlxSprite(-600, -200).loadGraphic(Paths.image('night/stageback','hex'));
+					stageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('night/stagefront','hex'));
+				case 'glitcher':
+					curStage = 'hexg';
+					bgHex = new FlxSprite(-600, -200).loadGraphic(Paths.image('glitcher/stageback','hex'));
+					stageFrontHex = new FlxSprite(-650, 600).loadGraphic(Paths.image('glitcher/stagefront','hex'));
+					fuckBackground = new FlxSprite(-600,-200).loadGraphic(Paths.image('WIRE/WIREStageBack','hex'));
+					fuckBackground.antialiasing = true;
+					fuckBackground.scrollFactor.set(0.9,0.9);
+					fuckBackground.alpha = 0;
+					fuckBackground.active = false;
+					trace('fBacj ' + fuckBackground + ' | ' + Paths.image('WIRE/WIREStageBack.png','hex'));
+					fuckHex = new Character(100, 100, 'hexWIRE');
+					fuckBoyfriend = new Boyfriend(770, 450, 'bfWIRE');
+					fuckHex.alpha = 0;
+					fuckBoyfriend.alpha = 0;
+			}
+
+
+			bg.antialiasing = true;
+			bg.scrollFactor.set(0.9, 0.9);
+			bg.active = false;
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+			stageFront.updateHitbox();
+			stageFront.antialiasing = true;
+			stageFront.scrollFactor.set(0.9, 0.9);
+			stageFront.active = false;
+			if (SONG.song.toLowerCase() != "glitcher")
+			{
+				trace('funny non glitcher');
+				add(bg);
+				add(stageFront);
+			}
+			else
+			{
+				trace('glticher');
+				add(bgHex);
+				add(stageFrontHex);
+			}
+		}
 		else
 		{
 			defaultCamZoom = 0.9;
@@ -511,6 +575,7 @@ class PlayState extends MusicBeatState
 
 			add(stageCurtains);
 		}
+		
 
 		var gfVersion:String = 'gf';
 
@@ -524,15 +589,29 @@ class PlayState extends MusicBeatState
 				gfVersion = 'gf-pixel';
 			case 'schoolEvil':
 				gfVersion = 'gf-pixel';
+			case 'hexss':
+				gfVersion = 'gf-ss';
+			case 'hexn':
+				gfVersion = 'gf-n';
+			case 'hexg':
+				gfVersion = 'gf-g';
 		}
-
-		if (curStage == 'limo')
-			gfVersion = 'gf-car';
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 
 		dad = new Character(100, 100, SONG.player2);
+
+		if (dad.curCharacter.contains('hex'))
+			switch(curStage)
+			{
+				case 'hexss':
+					dad = new Character(100, 100, 'hex-ss');
+				case 'hexn':
+					dad = new Character(100, 100, 'hex-n');
+				case 'hexg':
+					dad = new Character(100, 100, 'hexVirus');
+			}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
@@ -572,9 +651,24 @@ class PlayState extends MusicBeatState
 				dad.x -= 150;
 				dad.y += 100;
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+			case 'hex':
+				camPos.x += 400;
+			case 'hexVirus':
+				camPos.x += 400;	
 		}
 
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
+
+		if (dad.curCharacter.contains('hex'))
+			switch(curStage)
+			{
+				case 'hexss':
+					boyfriend = new Boyfriend(770, 450, 'bf-ss');
+				case 'hexn':
+					boyfriend = new Boyfriend(770, 450, 'bf-n');
+				case 'hexg':
+					boyfriend = new Boyfriend(770, 450, 'bf-g');
+			}
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
@@ -611,6 +705,15 @@ class PlayState extends MusicBeatState
 				gf.x += 180;
 				gf.y += 300;
 		}
+
+		
+		if (curStage == 'hexg')
+			{
+				trace('addded');
+				add(fuckBackground);
+				add(fuckHex);
+				add(fuckBoyfriend);
+			}
 
 		add(gf);
 
@@ -1243,6 +1346,40 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
+		if (!isWired && wired)
+			{
+				if (fuckBackground.alpha == 1)
+					isWired = true;
+				else
+				{
+					fuckBackground.alpha += 0.1;
+					trace(fuckBackground.alpha);
+					gf.alpha -= 0.1;
+					fuckBoyfriend.alpha += 0.1;
+					fuckHex.alpha += 0.1;
+					boyfriend.alpha -= 0.1;
+					dad.alpha -= 0.1;
+					bgHex.alpha -= 0.1;
+					stageFrontHex.alpha -= 0.1;
+				}
+			}
+			else if (isWired && !wired)
+			{
+				if (fuckBackground.alpha == 0)
+					isWired = false;
+				else
+				{
+					fuckBackground.alpha -= 0.1;
+					gf.alpha += 0.1;
+					fuckBoyfriend.alpha -= 0.1;
+					fuckHex.alpha -= 0.1;
+					boyfriend.alpha += 0.1;
+					dad.alpha += 0.1;
+					bgHex.alpha += 0.1;
+					stageFrontHex.alpha += 0.1;
+				}
+			}
+
 		if (FlxG.keys.justPressed.NINE)
 		{
 			if (iconP1.animation.curAnim.name == 'bf-old')
@@ -1543,14 +1680,26 @@ class PlayState extends MusicBeatState
 
 					switch (Math.abs(daNote.noteData))
 					{
-						case 0:
-							dad.playAnim('singLEFT' + altAnim, true);
-						case 1:
-							dad.playAnim('singDOWN' + altAnim, true);
 						case 2:
-							dad.playAnim('singUP' + altAnim, true);
+							if (wired)
+								fuckHex.playAnim('singUP', true);
+							else
+								dad.playAnim('singUP' + altAnim, true);
 						case 3:
-							dad.playAnim('singRIGHT' + altAnim, true);
+							if (wired)
+								fuckHex.playAnim('singRIGHT', true);
+							else
+								dad.playAnim('singRIGHT' + altAnim, true);
+						case 1:
+							if (wired)
+								fuckHex.playAnim('singDOWN', true);
+							else
+								dad.playAnim('singDOWN' + altAnim, true);
+						case 0:
+							if (wired)
+								fuckHex.playAnim('singLEFT', true);
+							else
+								dad.playAnim('singLEFT' + altAnim, true);
 					}
 
 					dad.holdTimer = 0;
@@ -2047,17 +2196,28 @@ class PlayState extends MusicBeatState
 			{
 				boyfriend.stunned = false;
 			});
-
 			switch (direction)
 			{
 				case 0:
-					boyfriend.playAnim('singLEFTmiss', true);
+					if (wired)
+						fuckBoyfriend.playAnim('singLEFTmiss', true);
+					else
+						boyfriend.playAnim('singLEFTmiss', true);
 				case 1:
-					boyfriend.playAnim('singDOWNmiss', true);
+					if (wired)
+						fuckBoyfriend.playAnim('singDOWNmiss', true);
+					else
+						boyfriend.playAnim('singDOWNmiss', true);
 				case 2:
-					boyfriend.playAnim('singUPmiss', true);
+					if (wired)
+						fuckBoyfriend.playAnim('singUPmiss', true);
+					else
+						boyfriend.playAnim('singUPmiss', true);
 				case 3:
-					boyfriend.playAnim('singRIGHTmiss', true);
+					if (wired)
+						fuckBoyfriend.playAnim('singRIGHTmiss', true);
+					else
+						boyfriend.playAnim('singRIGHTmiss', true);
 			}
 		}
 	}
@@ -2176,6 +2336,8 @@ class PlayState extends MusicBeatState
 
 	var startedMoving:Bool = false;
 
+	var lastStepT = 0;
+
 	function updateTrainPos():Void
 	{
 		if (trainSound.time >= 4700)
@@ -2238,6 +2400,16 @@ class PlayState extends MusicBeatState
 		{
 			// dad.dance();
 		}
+				
+		if (curStage == 'hexg' && lastStepT != curStep)
+			{
+				lastStepT = curStep;
+				switch(curStep)
+				{
+					case 576 | 815 | 1087 | 1327:
+						wired = !wired;
+				}
+			}
 	}
 
 	var lightningStrikeBeat:Int = 0;

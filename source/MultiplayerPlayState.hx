@@ -53,6 +53,14 @@ class MultiplayerPlayState extends MusicBeatState
 
 	var halloweenLevel:Bool = false;
 
+	var isWired:Bool;
+	var wired:Bool;
+	var bgHex:FlxSprite;
+	var stageFrontHex:FlxSprite;
+	private var fuckBackground:FlxSprite;
+	private var fuckBoyfriend:Boyfriend;
+	private var fuckHex:Character;
+
 	private var vocals:FlxSound;
 
 	private var dad:Character;
@@ -463,6 +471,62 @@ class MultiplayerPlayState extends MusicBeatState
 				add(waveSpriteFG);
 			 */
 		}
+		else if (SONG.player2.contains('hex')) // IM LAZY
+		{
+			defaultCamZoom = 0.9;
+			curStage = 'hex';
+			var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback','hex'));
+			var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront','hex'));
+
+
+			switch(SONG.song.toLowerCase())
+			{
+				case 'ram':
+					curStage = 'hexss';
+					bg = new FlxSprite(-600, -200).loadGraphic(Paths.image('sunset/stageback','hex'));
+					stageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('sunset/stagefront','hex'));
+				case 'hello-world':
+					curStage = 'hexn';
+					bg = new FlxSprite(-600, -200).loadGraphic(Paths.image('night/stageback','hex'));
+					stageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('night/stagefront','hex'));
+				case 'glitcher':
+					curStage = 'hexg';
+					bgHex = new FlxSprite(-600, -200).loadGraphic(Paths.image('glitcher/stageback','hex'));
+					stageFrontHex = new FlxSprite(-650, 600).loadGraphic(Paths.image('glitcher/stagefront','hex'));
+					fuckBackground = new FlxSprite(-600,-200).loadGraphic(Paths.image('WIRE/WIREStageBack','hex'));
+					fuckBackground.antialiasing = true;
+					fuckBackground.scrollFactor.set(0.9,0.9);
+					fuckBackground.alpha = 0;
+					fuckBackground.active = false;
+					trace('fBacj ' + fuckBackground + ' | ' + Paths.image('WIRE/WIREStageBack.png','hex'));
+					fuckHex = new Character(100, 100, 'hexWIRE');
+					fuckBoyfriend = new Boyfriend(770, 450, 'bfWIRE');
+					fuckHex.alpha = 0;
+					fuckBoyfriend.alpha = 0;
+			}
+
+
+			bg.antialiasing = true;
+			bg.scrollFactor.set(0.9, 0.9);
+			bg.active = false;
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+			stageFront.updateHitbox();
+			stageFront.antialiasing = true;
+			stageFront.scrollFactor.set(0.9, 0.9);
+			stageFront.active = false;
+			if (SONG.song.toLowerCase() != "glitcher")
+			{
+				trace('funny non glitcher');
+				add(bg);
+				add(stageFront);
+			}
+			else
+			{
+				trace('glticher');
+				add(bgHex);
+				add(stageFrontHex);
+			}
+		}
 		else
 		{
 			defaultCamZoom = 0.9;
@@ -503,15 +567,29 @@ class MultiplayerPlayState extends MusicBeatState
 				gfVersion = 'gf-pixel';
 			case 'schoolEvil':
 				gfVersion = 'gf-pixel';
+			case 'hexss':
+				gfVersion = 'gf-ss';
+			case 'hexn':
+				gfVersion = 'gf-n';
+			case 'hexg':
+				gfVersion = 'gf-g';
 		}
-
-		if (curStage == 'limo')
-			gfVersion = 'gf-car';
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 
 		dad = new Character(100, 100, SONG.player2);
+
+		if (dad.curCharacter.contains('hex'))
+			switch(curStage)
+			{
+				case 'hexss':
+					dad = new Character(100, 100, 'hex-ss');
+				case 'hexn':
+					dad = new Character(100, 100, 'hex-n');
+				case 'hexg':
+					dad = new Character(100, 100, 'hexVirus');
+			}
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
 
@@ -551,9 +629,24 @@ class MultiplayerPlayState extends MusicBeatState
 				dad.x -= 150;
 				dad.y += 100;
 				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+			case 'hex':
+				camPos.x += 400;
+			case 'hexVirus':
+				camPos.x += 400;	
 		}
 
 		boyfriend = new Boyfriend(770, 450, SONG.player1);
+
+		if (dad.curCharacter.contains('hex'))
+			switch(curStage)
+			{
+				case 'hexss':
+					boyfriend = new Boyfriend(770, 450, 'bf-ss');
+				case 'hexn':
+					boyfriend = new Boyfriend(770, 450, 'bf-n');
+				case 'hexg':
+					boyfriend = new Boyfriend(770, 450, 'bf-g');
+			}
 
 		// REPOSITIONING PER STAGE
 		switch (curStage)
@@ -590,6 +683,15 @@ class MultiplayerPlayState extends MusicBeatState
 				gf.x += 180;
 				gf.y += 300;
 		}
+
+		
+		if (curStage == 'hexg')
+			{
+				trace('addded');
+				add(fuckBackground);
+				add(fuckHex);
+				add(fuckBoyfriend);
+			}
 
 		add(gf);
 
@@ -1185,6 +1287,40 @@ class MultiplayerPlayState extends MusicBeatState
 		#if !debug
 		perfectMode = false;
 		#end
+
+		if (!isWired && wired)
+			{
+				if (fuckBackground.alpha == 1)
+					isWired = true;
+				else
+				{
+					fuckBackground.alpha += 0.1;
+					trace(fuckBackground.alpha);
+					gf.alpha -= 0.1;
+					fuckBoyfriend.alpha += 0.1;
+					fuckHex.alpha += 0.1;
+					boyfriend.alpha -= 0.1;
+					dad.alpha -= 0.1;
+					bgHex.alpha -= 0.1;
+					stageFrontHex.alpha -= 0.1;
+				}
+			}
+			else if (isWired && !wired)
+			{
+				if (fuckBackground.alpha == 0)
+					isWired = false;
+				else
+				{
+					fuckBackground.alpha -= 0.1;
+					gf.alpha += 0.1;
+					fuckBoyfriend.alpha -= 0.1;
+					fuckHex.alpha -= 0.1;
+					boyfriend.alpha += 0.1;
+					dad.alpha += 0.1;
+					bgHex.alpha += 0.1;
+					stageFrontHex.alpha += 0.1;
+				}
+			}
 
 		if (MPClientStore.client.users.get(MPClientStore.client.me).state.match(InGame(true)))
 			MPClientStore.client.setScore(songScore, health);
@@ -2101,6 +2237,8 @@ class MultiplayerPlayState extends MusicBeatState
 		gf.playAnim('scared', true);
 	}
 
+	var lastStepT = 0;
+
 	override function stepHit()
 	{
 		super.stepHit();
@@ -2113,6 +2251,16 @@ class MultiplayerPlayState extends MusicBeatState
 		{
 			// dad.dance();
 		}
+
+		if (curStage == 'hexg' && lastStepT != curStep)
+			{
+				lastStepT = curStep;
+				switch(curStep)
+				{
+					case 576 | 815 | 1087 | 1327:
+						wired = !wired;
+				}
+			}
 	}
 
 	var lightningStrikeBeat:Int = 0;

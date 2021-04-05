@@ -5,9 +5,9 @@ import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
+import flixel.addons.transition.FlxTransitionableState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.addons.transition.FlxTransitionableState;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -54,7 +54,7 @@ class MultiplayerLobby extends MusicBeatState
 			FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		}
 
-		for (i in 0...4)
+		for (i in 0...5)
 		{
 			plyrs.push(new MultiplayerLobbyEntry(i, null, this));
 		}
@@ -62,7 +62,7 @@ class MultiplayerLobby extends MusicBeatState
 		if (alreadyConnected)
 		{
 			var a = MPClientStore.client.users.keyValueIterator();
-			for (i in 0...4)
+			for (i in 0...5)
 			{
 				if (a.hasNext())
 					plyrs[i].setPlayer(a.next().value);
@@ -88,7 +88,7 @@ class MultiplayerLobby extends MusicBeatState
 		MPClientStore.client.onConnect = function(players)
 		{
 			var a = players.keyValueIterator();
-			for (i in 0...4)
+			for (i in 0...5)
 			{
 				if (a.hasNext())
 					plyrs[i].setPlayer(a.next().value);
@@ -100,7 +100,7 @@ class MultiplayerLobby extends MusicBeatState
 		MPClientStore.client.onUserUpdate = function(players, song)
 		{
 			var a = players.keyValueIterator();
-			for (i in 0...4)
+			for (i in 0...5)
 			{
 				if (a.hasNext())
 					plyrs[i].setPlayer(a.next().value);
@@ -138,9 +138,7 @@ class MultiplayerLobby extends MusicBeatState
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 			if (MPClientStore.client.owner && !MPClientStore.client.users.get(MPClientStore.client.me).state.getParameters()[0])
 			{
-				MPClientStore.client.onUserUpdate = function(player, songelapsed)
-				{
-				}
+				MPClientStore.client.onUserUpdate = function(player, songelapsed) {}
 				FlxG.switchState(new MultiplayerMusicMenu());
 			}
 			else

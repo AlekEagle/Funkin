@@ -57,6 +57,7 @@
     <library name="week4" preload="true" />
     <library name="week5" preload="true" />
     <library name="week6" preload="true" />
+    <library name="hex" preload="true" />
     <library name="bonusWeek" preload="true" />
     <library name="clown" preload="true" />
   </section>
@@ -71,6 +72,7 @@
     <library name="week4" preload="false" />
     <library name="week5" preload="false" />
     <library name="week6" preload="false" />
+    <library name="hex" preload="false" />
     <library name="bonusWeek" preload="false" />
     <library name="clown" preload="false" />
   </section>
@@ -93,6 +95,8 @@
   <assets path="assets/week5" library="week5" exclude="*.mp3" unless="web"/>
   <assets path="assets/week6" library="week6" exclude="*.ogg" if="web"/>
   <assets path="assets/week6" library="week6" exclude="*.mp3" unless="web"/>
+  <assets path="assets/hex" library="hex" exclude="*.ogg" if="web"/>
+  <assets path="assets/hex" library="hex" exclude="*.mp3" unless="web"/>
   <assets path="assets/bonusWeek" library="bonusWeek" exclude="*.ogg" if="web"/>
   <assets path="assets/bonusWeek" library="bonusWeek" exclude="*.mp3" unless="web"/>
   <assets path="assets/clown" library="clown" exclude="*.ogg" if="web"/>

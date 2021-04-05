@@ -63,6 +63,11 @@ class MultiplayerLoadingState extends MusicBeatState
 				if (MultiplayerPlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
 				checkLibrary("shared");
+				trace('hex poggers');
+				checkLibrary("hex");
+				if (MultiplayerPlayState.storyWeek > 0)
+					checkLibrary("week" + MultiplayerPlayState.storyWeek);
+				else
 				if (MultiplayerPlayState.storyWeek > 0) {
 					if (MultiplayerPlayState.storyWeek == 8) { // hard cock butt fuck you
 						checkLibrary("bonusWeek");

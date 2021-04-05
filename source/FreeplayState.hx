@@ -65,6 +65,8 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
 
 			addWeek(['Dunk', 'RAM', 'Hello-World', 'Glitcher', 'Encore'], 9, ['hex','hex','hex','hexVirus', 'hex']);
+		addWeek(['Improbable-Outset', 'Madness'], 7, []);
+		addWeek(['Lo-Fight', 'Ballistic', 'Overhead'], 8, []);
 
 		// LOAD MUSIC
 

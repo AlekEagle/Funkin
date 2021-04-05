@@ -68,6 +68,16 @@ class LoadingState extends MusicBeatState
 				if (PlayState.storyWeek > 0)
 					checkLibrary("week" + PlayState.storyWeek);
 				else
+				if (PlayState.storyWeek > 0) {
+					if (PlayState.storyWeek == 8) { // hard cock butt fuck you
+						checkLibrary("bonusWeek");
+						trace("loading whitty");
+					} else if (PlayState.storyWeek == 7) {
+						checkLibrary("clown");
+						trace("loading tricky");
+					} else
+						checkLibrary("week" + PlayState.storyWeek);
+				} else
 					checkLibrary("tutorial");
 				
 				var fadeTime = 0.5;

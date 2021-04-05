@@ -526,6 +526,7 @@ class MultiplayerPlayState extends MusicBeatState
 				add(bgHex);
 				add(stageFrontHex);
 			}
+		}
 		else if (SONG.song.toLowerCase() == 'lo-fight' || SONG.song.toLowerCase() == 'ballistic' || SONG.song.toLowerCase() == 'overhead')
 		{
 			defaultCamZoom = 0.9;

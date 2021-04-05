@@ -463,6 +463,37 @@ class MultiplayerPlayState extends MusicBeatState
 				add(waveSpriteFG);
 			 */
 		}
+		else if (SONG.song.toLowerCase() == 'improbable-outset' || SONG.song.toLowerCase() == 'madness')
+		{
+			//trace("line 538");
+			defaultCamZoom = 0.75;
+			curStage = 'nevada';
+
+			var bg:FlxSprite = new FlxSprite(-350, -300).loadGraphic(Paths.image('red','clown'));
+			// bg.setGraphicSize(Std.int(bg.width * 2.5));
+			// bg.updateHitbox();
+			bg.antialiasing = true;
+			bg.scrollFactor.set(0.9, 0.9);
+			if (SONG.song.toLowerCase() != 'madness')
+				add(bg);
+
+			var stageFront:FlxSprite = new FlxSprite(-1200, 300).loadGraphic(Paths.image('tricky_floor','clown'));
+			stageFront.frames = Paths.getSparrowAtlas('tricky_floor','clown');
+			stageFront.setGraphicSize(Std.int(stageFront.width * 1.4));
+			stageFront.antialiasing = true;
+			stageFront.scrollFactor.set(0.9, 0.9);
+			stageFront.active = false;
+			add(stageFront);
+			
+			var MAINLIGHT = new FlxSprite(-470, -150).loadGraphic(Paths.image('hue','clown'));
+			MAINLIGHT.alpha - 0.3;
+			MAINLIGHT.setGraphicSize(Std.int(MAINLIGHT.width * 0.9));
+			MAINLIGHT.blend = "screen";
+			MAINLIGHT.updateHitbox();
+			MAINLIGHT.antialiasing = true;
+			MAINLIGHT.scrollFactor.set(1.2, 1.2);
+			add(MAINLIGHT);
+		}
 		else
 		{
 			defaultCamZoom = 0.9;

@@ -30,6 +30,38 @@ class Character extends FlxSprite
 
 		switch (curCharacter)
 		{
+			case 'tricky':
+				tex = Paths.getSparrowAtlas('tricky','clown');
+				frames = tex;
+				animation.addByPrefix('idle', 'Idle', 24);
+				animation.addByPrefix('singUP', 'Sing Up', 24);
+				animation.addByPrefix('singRIGHT', 'Sing Right', 24);
+				animation.addByPrefix('singDOWN', 'Sing Down', 24);
+				animation.addByPrefix('singLEFT', 'Sing Left', 24); 
+				
+				addOffset("idle", 0, -75);
+				addOffset("singUP", 93, -76);
+				addOffset("singRIGHT", 16, -176);
+				addOffset("singLEFT", 103, -72);
+				addOffset("singDOWN", 6, -84);
+
+				playAnim('idle');
+			case 'trickyMask':
+				tex = Paths.getSparrowAtlas('TrickyMask','clown');
+				frames = tex;
+				animation.addByPrefix('idle', 'Idle', 24);
+				animation.addByPrefix('singUP', 'Sing Up', 24);
+				animation.addByPrefix('singRIGHT', 'Sing Right', 24);
+				animation.addByPrefix('singDOWN', 'Sing Down', 24);
+				animation.addByPrefix('singLEFT', 'Sing Left', 24); 
+				
+				addOffset("idle", 0, -117);
+				addOffset("singUP", 93, -100);
+				addOffset("singRIGHT", 16, -164);
+				addOffset("singLEFT", 194, -95);
+				addOffset("singDOWN", 32, -168);
+
+				playAnim('idle');
 			case 'gf':
 				// GIRLFRIEND CODE
 				tex = Paths.getSparrowAtlas('GF_assets');

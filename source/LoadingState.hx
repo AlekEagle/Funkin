@@ -65,7 +65,7 @@ class LoadingState extends MusicBeatState
 				checkLibrary("shared");
 				trace('hex poggers');
 				checkLibrary("hex");
-				if (PlayState.storyWeek > 0)
+				if (PlayState.storyWeek > 0 && PlayState.storyWeek != 9)
 					checkLibrary("week" + PlayState.storyWeek);
 				else
 				if (PlayState.storyWeek > 0) {
@@ -104,15 +104,23 @@ class LoadingState extends MusicBeatState
 	
 	function checkLibrary(library:String)
 	{
-		trace(Assets.hasLibrary(library));
-		if (Assets.getLibrary(library) == null)
+		if (library == "week9") // dont do this, but fuck you
 		{
-			@:privateAccess
-			if (!LimeAssets.libraryPaths.exists(library))
-				throw "Missing library: " + library;
-			
 			var callback = callbacks.add("library:" + library);
-			Assets.loadLibrary(library).onComplete(function (_) { callback(); });
+			Assets.loadLibrary("hex").onComplete(function (_) { callback(); });
+		}
+		else
+		{
+			trace(Assets.hasLibrary(library));
+			if (Assets.getLibrary(library) == null)
+			{
+				@:privateAccess
+				if (!LimeAssets.libraryPaths.exists(library))
+					throw "Missing library: " + library;
+				
+				var callback = callbacks.add("library:" + library);
+				Assets.loadLibrary(library).onComplete(function (_) { callback(); });
+			}
 		}
 	}
 	

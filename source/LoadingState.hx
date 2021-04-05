@@ -63,9 +63,13 @@ class LoadingState extends MusicBeatState
 				if (PlayState.SONG.needsVoices)
 					checkLoadSong(getVocalPath());
 				checkLibrary("shared");
-				if (PlayState.storyWeek > 0)
-					checkLibrary("week" + PlayState.storyWeek);
-				else
+				if (PlayState.storyWeek > 0) {
+					if (PlayState.storyWeek == 7) { // hard cock butt fuck you (again)
+						checkLibrary("bonusWeek");
+						trace("loading whitty");
+					} else
+						checkLibrary("week" + PlayState.storyWeek);
+				} else
 					checkLibrary("tutorial");
 				
 				var fadeTime = 0.5;

@@ -79,6 +79,8 @@ class MultiplayerMusicMenu extends MusicBeatState
 		if (StoryMenuState.weekUnlocked[6] || isDebug)
 			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
 
+		addWeek(['Lo-Fight', 'Ballistic', 'Overhead'], 7, []);
+
 		// LOAD MUSIC
 
 		// LOAD CHARACTERS

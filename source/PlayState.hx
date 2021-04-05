@@ -484,6 +484,55 @@ class PlayState extends MusicBeatState
 				add(waveSpriteFG);
 			 */
 		}
+		else if (SONG.song.toLowerCase() == 'lo-fight' || SONG.song.toLowerCase() == 'ballistic' || SONG.song.toLowerCase() == 'overhead')
+		{
+			defaultCamZoom = 0.9;
+			curStage = 'whitty';
+			var wBg:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('whittyBack', 'bonusWeek'));
+
+			if (SONG.song.toLowerCase() == 'ballistic' )
+			{
+				trace('pogging');
+				var bgTex = Paths.getSparrowAtlas('BallisticBackground', 'bonusWeek');
+				var nwBg:FlxSprite = new FlxSprite(-600, -200);
+				nwBg.frames = bgTex;
+				nwBg.antialiasing = true;
+				nwBg.scrollFactor.set(0.9, 0.9);
+				nwBg.active = true;
+				nwBg.animation.addByPrefix('start', 'Background Whitty Start', 24, false);
+				nwBg.animation.addByPrefix('gaming', 'Background Whitty Startup', 24, false);
+				nwBg.animation.addByPrefix('gameButMove', 'Background Whitty Moving', 16, true);
+				add(wBg);
+				add(nwBg);
+				nwBg.alpha = 0;
+				var wstageFront = new FlxSprite(-650, 600).loadGraphic(Paths.image('whittyFront', 'bonusWeek'));
+				wstageFront.setGraphicSize(Std.int(wstageFront.width * 1.1));
+				wstageFront.updateHitbox();
+				wstageFront.antialiasing = true;
+				wstageFront.scrollFactor.set(0.9, 0.9);
+				wstageFront.active = false;
+				add(wBg);
+				add(wstageFront);
+			}
+			else
+			{
+				wBg.antialiasing = true;
+				wBg.scrollFactor.set(0.9, 0.9);
+				wBg.active = false;
+					
+				var wstageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('whittyFront', 'bonusWeek'));
+				wstageFront.setGraphicSize(Std.int(wstageFront.width * 1.1));
+				wstageFront.updateHitbox();
+				wstageFront.antialiasing = true;
+				wstageFront.scrollFactor.set(0.9, 0.9);
+				wstageFront.active = false;
+				add(wBg);
+				add(wstageFront);
+			}
+			// bg.setGraphicSize(Std.int(bg.width * 2.5));
+			// bg.updateHitbox();
+
+		}
 		else
 		{
 			defaultCamZoom = 0.9;
